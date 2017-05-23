@@ -32,5 +32,5 @@ VARIATION_WEIGHT = 1e0
 
 # Miscellaneous parameters.
 ITERS = 100
-SAVE_PER_N_ITERS = 10
+SAVE_PER_N_ITERS = 20
 HEIGHT = 400

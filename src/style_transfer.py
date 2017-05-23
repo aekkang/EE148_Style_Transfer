@@ -24,14 +24,17 @@ from minimizer import *
 
 # Parse script arguments.
 parser = argparse.ArgumentParser(description="Style transfer using neural networks.")
-parser.add_argument("content_path", help="Path to the content image.")
 parser.add_argument("style_path", help="Path to the style image.")
-parser.add_argument("combination_prefix", help="Desired path prefix to the combined image.")
 
 args = parser.parse_args()
-content_path = args.content_path
-style_path = args.style_path
-combination_prefix = args.combination_prefix
+dir_path = args.dir_path
+
+if dir_path[-1] != '/':
+    dir_path += '/'
+
+content_path = dir_path + "content.jpg"
+style_path = dir_path + "style.jpg"
+combination_prefix = dir_path + "combination"
 
 
 ##############################
@@ -75,11 +78,8 @@ minimizer = Minimizer(f_to_minimize, width, height, combination_prefix)
 combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
 combination_i = combination_i.flatten()
 
-# We use L-BFGS-B mmeory
+# Minimize the loss with respect to the combined image. We use L-BFGS-B
+# as the minimization method as it can work around memory constraints.
 result = minimize(minimizer.f_loss, combination_i, jac=minimizer.f_gradients,
                   method="L-BFGS-B", callback=minimizer.write,
                   options={"maxiter": ITERS})
-
-# Save final results.
-combination_final = result.x.reshape((1, height, width, 3))
-imwrite(combination_prefix + "_final.jpg", deprocess_img(combination_final, height, width))

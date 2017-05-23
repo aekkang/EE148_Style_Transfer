@@ -45,6 +45,7 @@ class Minimizer(object):
         self.width = width
         self.height = height
         self.combination_prefix = combination_prefix
+        self.logfile = open(dir_path + "loss.log")
 
     def calculate_loss_and_gradients(self, combination_i):
         """Given an input array, compute the loss and its gradients.
@@ -76,15 +77,29 @@ class Minimizer(object):
         """Callback method that saves the combined image every particular number of iterations.
         """
 
+        # Log status.
         self.i += 1
-        print(self.i)
+        self.logfile.write("{}: {:g}\n".format(self.i, self.loss))
+
+        # Save the combined image if a sufficient number of iterations has passed.
         if self.i % SAVE_PER_N_ITERS == 0:
-            # Log status.
+            # Print status.
             print("Iteration: {}".format(self.i))
             print("Elapsed time: {:.2f}s".format(time.time() - self.start))
             print("Current loss: {:g}".format(self.loss))
             print('')
 
-            # Save the image.
+            # Save the combined image.
             img = np.copy(combination_i)
-            imwrite(self.combination_prefix + "_{}.jpg".format(self.i), deprocess_img(img, self.height, self.width))
+            imwrite(self.combination_prefix + "_{}.jpg".format(self.i), deprocess_img(img, self.width, self.height))
+        elif self.i == ITERS + 1:
+            # Print status.
+            print("Finished!")
+            print('')
+            
+            # Save the final combined image.
+            combination_final = combination_i.reshape((1, self.height, self.width, 3))
+            imwrite(combination_prefix + "_final.jpg", deprocess_img(combination_final, self.width, self.height))
+
+            # Close the log file.
+            self.logfile.close()
