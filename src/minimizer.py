@@ -51,7 +51,7 @@ class Minimizer(object):
         """
 
         # Calculate the loss and its gradients.
-        combination_i = combination_i.reshape((1, height, width, 3))
+        combination_i = combination_i.reshape((1, self.height, self.width, 3))
         output = self.f_to_minimize([combination_i])
 
         # Store the loss and its gradients.
@@ -62,7 +62,7 @@ class Minimizer(object):
         """Given an input array, return the loss.
         """
 
-        calculate_loss_and_gradients(combination_i)
+        self.calculate_loss_and_gradients(combination_i)
 
         return self.loss
 
@@ -77,13 +77,14 @@ class Minimizer(object):
         """
 
         self.i += 1
-
+        print(self.i)
         if self.i % SAVE_PER_N_ITERS == 0:
             # Log status.
             print("Iteration: {}".format(self.i))
             print("Elapsed time: {:.2f}s".format(time.time() - self.start))
-            print("Current loss: {:.2f}".format(self.loss))
+            print("Current loss: {:g}".format(self.loss))
             print('')
 
             # Save the image.
-            imwrite(combination_prefix + "_{}.jpg".format(self.i), deprocess_img(combination_i, height, width))
+            img = np.copy(combination_i)
+            imwrite(self.combination_prefix + "_{}.jpg".format(self.i), deprocess_img(img, self.height, self.width))
