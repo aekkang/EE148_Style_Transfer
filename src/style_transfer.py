@@ -76,7 +76,7 @@ combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
 combination_i = combination_i.flatten()
 
 # We use L-BFGS-B mmeory
-result = minimize(minimizer.loss, combination_i, jac=minimizer.gradients,
+result = minimize(minimizer.f_loss, combination_i, jac=minimizer.f_gradients,
                   method="L-BFGS-B", callback=minimizer.write,
                   options={"maxiter": ITERS})
 

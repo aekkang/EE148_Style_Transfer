@@ -58,7 +58,7 @@ class Minimizer(object):
         self.loss = output[0]
         self.gradients = output[1].flatten().astype('float64')
 
-    def loss(self, combination_i):
+    def f_loss(self, combination_i):
         """Given an input array, return the loss.
         """
 
@@ -66,7 +66,7 @@ class Minimizer(object):
 
         return self.loss
 
-    def gradients(self, combination_i):
+    def f_gradients(self, combination_i):
         """Given an input array, return the gradients of the loss.
         """
 
