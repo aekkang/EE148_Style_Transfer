@@ -71,8 +71,8 @@ from utility import *
 base_model = VGG19(include_top=False)
 
 # Load images.
-content = preprocess_img("content_neckarfront.jpg")
-style = preprocess_img("style_starrynight.jpg")
+content = preprocess_img("../examples/content_neckarfront.jpg")
+style = preprocess_img("../examples/style_starrynight.jpg")
 
 # # Calculate dimensions.
 # input_width, input_height = content.size
