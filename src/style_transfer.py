@@ -24,7 +24,7 @@ from minimizer import *
 
 # Parse script arguments.
 parser = argparse.ArgumentParser(description="Style transfer using neural networks.")
-parser.add_argument("style_path", help="Path to the style image.")
+parser.add_argument("dir_path", help="Path to the directory containing images.")
 
 args = parser.parse_args()
 dir_path = args.dir_path
@@ -34,7 +34,6 @@ if dir_path[-1] != '/':
 
 content_path = dir_path + "content.jpg"
 style_path = dir_path + "style.jpg"
-combination_prefix = dir_path + "combination"
 
 
 ##############################
@@ -67,7 +66,7 @@ gradients = K.gradients(loss, combination)
 
 # Function to minimize.
 f_to_minimize = K.function([combination], [loss] + gradients)
-minimizer = Minimizer(f_to_minimize, width, height, combination_prefix)
+minimizer = Minimizer(f_to_minimize, width, height, dir_path)
 
 
 ##############################

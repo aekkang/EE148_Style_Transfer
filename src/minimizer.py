@@ -28,7 +28,7 @@ class Minimizer(object):
     """Interface to SciPy's minimize function.
     """
 
-    def __init__(self, f_to_minimize, width, height, combination_prefix):
+    def __init__(self, f_to_minimize, width, height, dir_path):
         """Initialize shared values and store the loss function to minimize.
         """
 
@@ -44,8 +44,8 @@ class Minimizer(object):
         self.start = time.time()
         self.width = width
         self.height = height
-        self.combination_prefix = combination_prefix
-        self.logfile = open(dir_path + "loss.log")
+        self.combination_prefix = dir_path + "combination"
+        self.logfile = open(dir_path + "loss.log", 'w')
 
     def calculate_loss_and_gradients(self, combination_i):
         """Given an input array, compute the loss and its gradients.
@@ -99,7 +99,7 @@ class Minimizer(object):
             
             # Save the final combined image.
             combination_final = combination_i.reshape((1, self.height, self.width, 3))
-            imwrite(combination_prefix + "_final.jpg", deprocess_img(combination_final, self.width, self.height))
+            imwrite(self.combination_prefix + "_final.jpg", deprocess_img(combination_final, self.width, self.height))
 
             # Close the log file.
             self.logfile.close()
