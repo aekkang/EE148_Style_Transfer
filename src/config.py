@@ -32,3 +32,4 @@ VARIATION_WEIGHT = 1e0
 
 # Miscellaneous parameters.
 ITERATIONS = 10
+HEIGHT = 250

@@ -10,6 +10,8 @@ import argparse
 import numpy as np
 from keras import backend as K
 from scipy.optimize import minimize
+from scipy.optimize import fmin_l_bfgs_b
+
 from cv2 import imwrite
 
 from data_processing import *
@@ -33,6 +35,7 @@ style_path = args.style_path
 
 # Calculate desired width and height.
 width, height = load_img(content_path).size
+width, height = int(HEIGHT * width / height), HEIGHT
 
 # Load images and declare variable to store the combined image.
 content = preprocess_img(content_path, height, width)
@@ -70,10 +73,20 @@ gradients = K.gradients(loss, combination)
 f_to_minimize = K.function([combination], [loss] + gradients)
 
 class Minimizer(object):
+    def __init__(self):
+        self.loss = None
+        self.gradients = None
+
     def f_loss(self, combination_i):
         combination_i = combination_i.reshape((1, height, width, 3))
-        self.loss, self.gradients = f_to_minimize([combination_i])[0]
-        
+        output = f_to_minimize([combination_i])[0]
+        self.loss = output[0]
+
+        if len(output[1:]) == 1:
+            self.gradients = output[1].flatten().astype('float64')
+        else:
+            self.gradients = np.array(output[1:]).flatten().astype('float64')
+
         return self.loss
 
     def f_gradients(self, combination_i):
@@ -94,7 +107,8 @@ combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
 for i in range(ITERATIONS):
     print("Iteration: " + str(i))
 
-    result = minimize(minimizer.f_loss, combination_i.flatten(), jac=minimizer.f_gradients)
+    combination_i, min_val, info = fmin_l_bfgs_b(minimizer.f_loss, combination_i.flatten(), fprime=minimizer.f_gradients, maxfun=20)
+    #result = minimize(minimizer.f_loss, combination_i.flatten(), jac=minimizer.f_gradients)
     print(result.status)
     print("Iteration loss: " + result.status)
     
