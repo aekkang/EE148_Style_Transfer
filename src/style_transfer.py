@@ -56,7 +56,10 @@ gradients = K.gradients(loss, combination)
 
 # Function to minimize.
 f_loss = K.function([combination], [loss])
-f_gradients = K.function([combination], gradients)
+f_gradients_helper = K.function([combination], gradients)
+
+def f_gradients(combination_i):
+    return f_gradients_helper(combination_i).flatten()
 
 
 ##############################
@@ -69,7 +72,7 @@ combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
 for i in range(ITERATIONS):
     print("Iteration: " + str(i))
 
-    result = minimize(f_loss, combination_i, jac=f_gradients)
+    result = minimize(f_loss, combination_i.flatten(), jac=f_gradients)
     print(result.status)
     print("Iteration loss: " + result.status)
     
