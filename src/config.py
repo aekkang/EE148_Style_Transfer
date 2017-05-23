@@ -31,5 +31,6 @@ STYLE_LAYERS_WEIGHTS = [1. / len(STYLE_LAYERS) for _ in range(len(STYLE_LAYERS))
 VARIATION_WEIGHT = 1e0
 
 # Miscellaneous parameters.
-ITERATIONS = 10
+ITERS = 100
+SAVE_PER_N_ITERS = 20
 HEIGHT = 400

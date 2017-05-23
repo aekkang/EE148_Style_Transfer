@@ -17,10 +17,8 @@ from config import *
 # PREPROCESSING
 ##############################
 
-def preprocess_img(path, height, width):
-    """
-    Preprocess a single image at the given path into the network
-    input format.
+def preprocess_img(path, width, height):
+    """Preprocess a single image at the given path into the network input format.
     """
 
     # Load image.
@@ -41,9 +39,8 @@ def preprocess_img(path, height, width):
 # DEPROCESSING
 ##############################
 
-def deprocess_img(img, height, width):
-    """
-    Deprocess the given image to a consumable format.
+def deprocess_img(img, width, height):
+    """Deprocess the given image to a consumable format.
     """
 
     # Reshape the image.
