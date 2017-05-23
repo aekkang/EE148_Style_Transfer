@@ -81,6 +81,7 @@ class Minimizer(object):
 
         # Log status.
         self.logfile.write("{}: {:g}\n".format(self.i, self.loss))
+        self.logfile.flush()
 
         # Save the combined image if a sufficient number of iterations has passed.
         if self.i % SAVE_PER_N_ITERS == 0:
