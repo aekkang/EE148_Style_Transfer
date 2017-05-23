@@ -104,14 +104,17 @@ minimizer = Minimizer()
 
 # Start with a white noise image.
 combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
-
+import time
+start = time.time()
 for i in range(ITERATIONS):
     print("Iteration: " + str(i))
 
-    combination_i, min_val, info = fmin_l_bfgs_b(minimizer.f_loss, combination_i.flatten(), fprime=minimizer.f_gradients)
+    result = minimize(minimizer.f_loss, combination_i.flatten(), jac=minimizer.f_gradients, method="L-BFGS-B", options={"maxiter":20}, callback=lambda x:imwrite("../examples/combination_test.jpg", deprocess_img(x, height, width)))
+    #combination_i, min_val, info = fmin_l_bfgs_b(minimizer.f_loss, combination_i.flatten(), fprime=minimizer.f_gradients, maxfun=20)
     #result = minimize(minimizer.f_loss, combination_i.flatten(), jac=minimizer.f_gradients)
     print(combination_i)
-    print("Iteration loss: " + str(min_val))
-    
+    print("Iteration loss: " + str(result.status))
+    print("TIME: " + str(time.time() - start))    
+
     # Save iteration results.
     imwrite(combination_path, deprocess_img(combination_i, height, width))
