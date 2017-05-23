@@ -56,7 +56,7 @@ gradients = K.gradients(loss, combination)
 
 # Function to minimize.
 f_loss = K.function([combination], [loss])
-f_gradients = K.function([combination], [gradients])
+f_gradients = K.function([combination], gradients)
 
 
 ##############################

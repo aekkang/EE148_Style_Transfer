@@ -51,7 +51,7 @@ def style_loss(style_tensor, combination_tensor):
 
     # Calculate the weight corresponding to the layer.
     layer_shape = np.product(combination_tensor.get_shape().as_list())
-    layer_weight = 1. / (4 * shape ** 2)
+    layer_weight = 1. / (4 * layer_shape ** 2)
 
     # Calculate the Gram matrices.
     style_gram = gram_matrix(style_tensor)
@@ -73,7 +73,7 @@ def variation_loss(img_tensor):
     vertical_var = K.square(img_tensor[:, :-1, :-1] - img_tensor[:, 1:, :-1])
     horizontal_var = K.square(img_tensor[:, :-1, :-1] - img_tensor[:, -1:, :1])
 
-    return K.sum(K.pow(vertical + horizontal, 1.25))
+    return K.sum(K.pow(vertical_var + horizontal_var, 1.25))
 
 
 ##############################
@@ -97,10 +97,10 @@ def total_loss(model):
     for i, style_layer in enumerate(STYLE_LAYERS):
         style_tensor = model.get_layer(style_layer).output[1]
         combination_tensor = model.get_layer(style_layer).output[2]
-        loss += STYLE_WEIGHT * STYLE_LAYERS_WEIGHT[i] \
+        loss += STYLE_WEIGHT * STYLE_LAYERS_WEIGHTS[i] \
                 * style_loss(style_tensor, combination_tensor)
 
     # Variation loss.
-    loss += VARIATION_WEIGHT * variation_loss(model.inputs[2])
+    loss += VARIATION_WEIGHT * variation_loss(model.inputs[0][2])
 
     return loss
