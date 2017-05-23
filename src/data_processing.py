@@ -11,10 +11,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
-from skimage.exposure import rescale_intensity
+# from skimage.exposure import rescale_intensity
 
 from keras.preprocessing.image import load_img, img_to_array
 from keras.applications.vgg19 import VGG19, preprocess_input
+from keras import backend as K
 
 from utility import *
 
@@ -38,6 +39,11 @@ def preprocess_img(path):
 
     # Use the VGG19 preprocess method.
     arr = preprocess_input(arr)
+
+    # Contain the dataset in a Keras variable.
+    var = K.variable(arr)
+
+    return var
 
 def deprocess_img(img):
     """

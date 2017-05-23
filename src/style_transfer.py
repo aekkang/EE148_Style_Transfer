@@ -11,6 +11,7 @@
 import numpy as np
 from keras.applications.vgg19 import VGG19
 from keras.callbacks import ModelCheckpoint
+from keras import backend as K
 
 from data_processing import *
 from utility import *
@@ -61,18 +62,30 @@ from utility import *
 
 
 # TODO: Average pooling?
+# TODO: make the path input system better
+
+content_path = "../examples/content_neckarfront.jpg"
+style_path = "../examples/style_starrynight.jpg"
 
 
 ##############################
 # MODEL ARCHITECTURE
 ##############################
 
-# Load the pre-trained VGG19 network.
-base_model = VGG19(include_top=False)
-
 # Load images.
-content = preprocess_img("../examples/content_neckarfront.jpg")
-style = preprocess_img("../examples/style_starrynight.jpg")
+content = preprocess_img(content_path)
+style = preprocess_img(style_path)
+
+# Declare variable to store the combined image.
+width, height = load_img(content_path).size
+combination = K.placeholder((1, height, width, 3))
+
+# Concatenate the images into one tensor.
+input_tensor = K.concatenate(content, style, combination)
+
+# Load the pre-trained VGG19 network.
+model = VGG19(input_tensor=input_tensor, include_top=False)
+
 
 # # Calculate dimensions.
 # input_width, input_height = content.size
