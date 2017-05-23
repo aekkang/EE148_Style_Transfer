@@ -72,16 +72,18 @@ style_path = "../examples/style_starrynight.jpg"
 # MODEL ARCHITECTURE
 ##############################
 
+# Calculate desired width and height.
+width, height = load_img(content_path).size
+
 # Load images.
-content = preprocess_img(content_path)
-style = preprocess_img(style_path)
+content = preprocess_img(content_path, height, width)
+style = preprocess_img(style_path, height, width)
 
 # Declare variable to store the combined image.
-width, height = load_img(content_path).size
 combination = K.placeholder((1, height, width, 3))
 
 # Concatenate the images into one tensor.
-input_tensor = K.concatenate(content, style, combination)
+input_tensor = K.concatenate((content, style, combination))
 
 # Load the pre-trained VGG19 network.
 model = VGG19(input_tensor=input_tensor, include_top=False)

@@ -24,14 +24,14 @@ from utility import *
 # DATA PROCESSING
 ##############################
 
-def preprocess_img(path):
+def preprocess_img(path, height, width):
     """
     Preprocess a single image at the given path into the VGG19
     input format.
     """
 
     # Load image.
-    img = load_img(path)
+    img = load_img(path, target_size=(height, width))
 
     # Convert the image to a dataset.
     arr = img_to_array(img)
