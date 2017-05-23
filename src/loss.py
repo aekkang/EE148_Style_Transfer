@@ -9,6 +9,8 @@
 import numpy as np
 from keras import backend as K
 
+from config import *
+
 
 ##############################
 # CONTENT LOSS
