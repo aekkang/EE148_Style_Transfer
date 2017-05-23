@@ -3,140 +3,75 @@
 #
 # Author:   Andrew Kang
 # File:     style_transfer.py
-# Desc:     Contains the actual neural network necessary for the
-#           style transfer.
-#           Adapted from https://github.com/fchollet/keras/blob/master/examples/neural_style_transfer.py.
+# Desc:     Contains script for style transfer.
 ######################################################################
 
+import argparse
 import numpy as np
-from keras.applications.vgg19 import VGG19
-from keras.callbacks import ModelCheckpoint
 from keras import backend as K
+from scipy.optimize import minimize
 
 from data_processing import *
-from utility import *
+from loss import *
+from config import *
 
 
 ##############################
-# DATA PREPROCESSING
+# DATA PROCESSING
 ##############################
 
-# # Load the dataset.
-# (X_train, Y_train), (X_test, Y_test) = load_data()
+# Parse script arguments.
+parser = argparse.ArgumentParser(description="Style transfer using neural networks.")
+parser.add_argument("content_path", help="Path to the content image.")
+parser.add_argument("style_path", help="Path to the style image.")
+parser.add_argument("combination_path", help="Desired path to the combined image.")
 
-# # Reshape the dataset to the desired format.
-# loc_train = Y_train.reshape(Y_train.shape[0], 1, 1, 4)
-# conf_train = np.ones((Y_train.shape[0], 1, 1, 1))
-# Y_train = np.concatenate((loc_train, conf_train), axis=3)
-# Y_train = transform(Y_train)
+args = parser.parse_args()
+content_path = args.content_path
+style_path = args.style_path
 
-# loc_test = Y_test.reshape(Y_test.shape[0], 1, 1, 4)
-# conf_test = np.ones((Y_test.shape[0], 1, 1, 1))
-# Y_test = np.concatenate((loc_test, conf_test), axis=3)
-# Y_test = transform(Y_test)
+# Calculate desired width and height.
+width, height = load_img(content_path).size
 
-# def visualize_layer(model, layer_name):
-#     """
-#     Visualize the specified layer of the specified model.
-#     """
+# Load images and declare variable to store the combined image.
+content = preprocess_img(content_path, height, width)
+style = preprocess_img(style_path, height, width)
+combination = K.placeholder((1, height, width, 3))
 
-#     # Get the layer.
-#     layer = model.get_layer(layer_name)
-
-#     # Get the kernels of the layer. Ignore the bias terms.
-#     kernels = layer.get_weights()[0]
-#     n_kernels = kernels.shape[3]
-
-#     # Show the kernels as images.
-#     for i in range(n_kernels):
-#         plt.subplot(1, n_kernels, i + 1)
-#         show_image(kernels[:, :, 0, i])
-
-#     if AUGMENT:
-#         plt.savefig("../img/augment/kernels.png")
-#     else:
-#         plt.savefig("../img/no_augment/kernels.png")
-
-# https://github.com/fchollet/deep-learning-models/blob/master/vgg19.py
-
-
-
-# TODO: Average pooling?
-# TODO: make the path input system better
-
-content_path = "../examples/content_neckarfront.jpg"
-style_path = "../examples/style_starrynight.jpg"
+# Concatenate the images into one tensor.
+input_tensor = K.concatenate((content, style, combination), axis=0)
 
 
 ##############################
 # MODEL ARCHITECTURE
 ##############################
 
-# Calculate desired width and height.
-width, height = load_img(content_path).size
+# Load the pre-trained network.
+model = NETWORK_MODEL(input_tensor=input_tensor, include_top=False)
 
-# Load images.
-content = preprocess_img(content_path, height, width)
-style = preprocess_img(style_path, height, width)
+# Calculate the total loss and its gradients with respect to the
+# combined image.
+loss = total_loss(model)
+gradients = K.gradients(loss, combination)
 
-# Declare variable to store the combined image.
-combination = K.placeholder((1, height, width, 3))
-
-# Concatenate the images into one tensor.
-input_tensor = K.concatenate((content, style, combination))
-
-# Load the pre-trained VGG19 network.
-model = VGG19(input_tensor=input_tensor, include_top=False)
-
-
-# # Calculate dimensions.
-# input_width, input_height = content.size
-# output_width, output_height = int(FIXED_HEIGHT * input_width / input_height), FIXED_HEIGHT
-
-
-# base_output = base_model.output
-
-# # Add new layers in place of the last layer in the original model.
-# global1 = GlobalAveragePooling2D()(base_output)
-# global1 = Reshape((1, 1, 2048))(global1)
-# loc1 = Dense(4, activation='tanh')(global1)
-# conf1 = Dense(1, activation='sigmoid')(global1)
-# output1 = Concatenate(axis=3)([loc1, conf1])
-
-# # Create the final model.
-# model = Model(inputs=base_model.input, outputs=output1)
+# Function to minimize.
+f_loss = K.function([combination], [loss])
+f_gradients = K.function([combination], [gradients])
 
 
 ##############################
-# TRAINING
+# IMAGE SEARCH
 ##############################
 
-# # Freeze original InceptionV3 layers during training.
-# for layer in base_model.layers:
-#     layer.trainable = False
+# Start with a white noise image.
+combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
 
-# # Print summary and compile.
-# model.summary()
-# model.compile(loss=F, optimizer=OPTIMIZER)
+for i in range(ITERATIONS):
+    print("Iteration: " + str(i))
 
-# # Fit the model; save the training history and the best model.
-# if SAVE:
-#     checkpointer = ModelCheckpoint(filepath=RESULTS_DIR + "intermediate_model.hdf5", verbose=VERBOSE, save_best_only=True)
-#     hist = model.fit(X_train, Y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=VERBOSE, validation_data=(X_test, Y_test), callbacks=[checkpointer])
-# else:
-#     hist = model.fit(X_train, Y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, verbose=VERBOSE)
-
-# model.save(RESULTS_DIR + "final_model.hdf5")
-# np.save(RESULTS_DIR + "image_classification_results", hist.history)
-
-
-##############################
-# TESTING
-##############################
-
-# # Calculate test score and accuracy.
-# score = model.evaluate(X_test, Y_test, verbose=VERBOSE)
-
-# print("_" * 65)
-# print("Test loss: ", score)
-# print("_" * 65)
+    result = minimize(f_loss, combination_i, jac=f_gradients)
+    print(result.status)
+    print("Iteration loss: " + result.status)
+    
+    # Save iteration results.
+    imsave(combination_path, deprocess_img(combination_i))
