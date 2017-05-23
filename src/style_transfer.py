@@ -10,6 +10,7 @@ import argparse
 import numpy as np
 from keras import backend as K
 from scipy.optimize import minimize
+from cv2 import imwrite
 
 from data_processing import *
 from loss import *
@@ -55,11 +56,16 @@ loss = total_loss(model)
 gradients = K.gradients(loss, combination)
 
 # Function to minimize.
-f_loss = K.function([combination], [loss])
+f_loss_helper = K.function([combination], [loss])
 f_gradients_helper = K.function([combination], gradients)
 
+def f_loss(combination_i):
+    combination_i = combination_i.reshape((1, height, width, 3))
+    return f_loss_helper([combination_i])[0]
+
 def f_gradients(combination_i):
-    return f_gradients_helper(combination_i).flatten()
+    combination_i = combination_i.reshape((1, height, width, 3))
+    return f_gradients_helper([combination_i])[0].flatten()
 
 
 ##############################
@@ -77,4 +83,4 @@ for i in range(ITERATIONS):
     print("Iteration loss: " + result.status)
     
     # Save iteration results.
-    imsave(combination_path, deprocess_img(combination_i))
+    imwrite(combination_path, deprocess_img(combination_i))
