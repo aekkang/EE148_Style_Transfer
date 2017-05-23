@@ -41,13 +41,12 @@ def preprocess_img(path, height, width):
 # DEPROCESSING
 ##############################
 
-def deprocess_img(img):
+def deprocess_img(img, height, width):
     """
     Deprocess the given image to a consumable format.
     """
 
     # Reshape the image.
-    width, height = img.size
     img = img.reshape((height, width, 3))
 
     # Undo the network preprocess method.

@@ -32,6 +32,7 @@ parser.add_argument("combination_path", help="Desired path to the combined image
 args = parser.parse_args()
 content_path = args.content_path
 style_path = args.style_path
+combination_path = args.combination_path
 
 # Calculate desired width and height.
 width, height = load_img(content_path).size
@@ -79,7 +80,7 @@ class Minimizer(object):
 
     def f_loss(self, combination_i):
         combination_i = combination_i.reshape((1, height, width, 3))
-        output = f_to_minimize([combination_i])[0]
+        output = f_to_minimize([combination_i])
         self.loss = output[0]
 
         if len(output[1:]) == 1:
@@ -107,10 +108,10 @@ combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
 for i in range(ITERATIONS):
     print("Iteration: " + str(i))
 
-    combination_i, min_val, info = fmin_l_bfgs_b(minimizer.f_loss, combination_i.flatten(), fprime=minimizer.f_gradients, maxfun=20)
+    combination_i, min_val, info = fmin_l_bfgs_b(minimizer.f_loss, combination_i.flatten(), fprime=minimizer.f_gradients)
     #result = minimize(minimizer.f_loss, combination_i.flatten(), jac=minimizer.f_gradients)
-    print(result.status)
-    print("Iteration loss: " + result.status)
+    print(combination_i)
+    print("Iteration loss: " + str(min_val))
     
     # Save iteration results.
-    imwrite(combination_path, deprocess_img(combination_i))
+    imwrite(combination_path, deprocess_img(combination_i, height, width))
