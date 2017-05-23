@@ -56,21 +56,37 @@ loss = total_loss(model)
 gradients = K.gradients(loss, combination)
 
 # Function to minimize.
-f_loss_helper = K.function([combination], [loss])
-f_gradients_helper = K.function([combination], gradients)
+# f_loss_helper = K.function([combination], [loss])
+# f_gradients_helper = K.function([combination], gradients)
 
-def f_loss(combination_i):
-    combination_i = combination_i.reshape((1, height, width, 3))
-    return f_loss_helper([combination_i])[0]
+# def f_loss(combination_i):
+#     combination_i = combination_i.reshape((1, height, width, 3))
+#     return f_loss_helper([combination_i])[0]
 
-def f_gradients(combination_i):
-    combination_i = combination_i.reshape((1, height, width, 3))
-    return f_gradients_helper([combination_i])[0].flatten()
+# def f_gradients(combination_i):
+#     combination_i = combination_i.reshape((1, height, width, 3))
+#     return f_gradients_helper([combination_i])[0].flatten()
+
+f_to_minimize = K.function([combination], [loss] + gradients)
+
+class Minimizer(object):
+    def f_loss(self, combination_i):
+        combination_i = combination_i.reshape((1, height, width, 3))
+        self.loss, self.gradients = f_to_minimize([combination_i])[0]
+        
+        return self.loss
+
+    def f_gradients(self, combination_i):
+        return np.copy(self.gradients).flatten()
+        # combination_i = combination_i.reshape((1, height, width, 3))
+        # return f_gradients_helper([combination_i])[0].flatten()
 
 
 ##############################
 # IMAGE SEARCH
 ##############################
+
+minimizer = Minimizer()
 
 # Start with a white noise image.
 combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
@@ -78,7 +94,7 @@ combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
 for i in range(ITERATIONS):
     print("Iteration: " + str(i))
 
-    result = minimize(f_loss, combination_i.flatten(), jac=f_gradients)
+    result = minimize(minimizer.f_loss, combination_i.flatten(), jac=minimizer.f_gradients)
     print(result.status)
     print("Iteration loss: " + result.status)
     
