@@ -24,10 +24,10 @@ from minimizer import *
 
 # Parse script arguments.
 parser = argparse.ArgumentParser(description="Style transfer using neural networks.")
-parser.add_argument("dir_path", help="Path to the directory containing images.")
-parser.add_argument("--content_weight", help="Weight on content in combined image.")
-parser.add_argument("--style_weight", help="Weight on style in combined image.")
-parser.add_argument("--variation_weight", help="Weight on variation in combined image.")
+parser.add_argument("dir_path", type=str, help="Path to the directory containing images.")
+parser.add_argument("--content_weight", type=float, help="Weight on content in combined image.")
+parser.add_argument("--style_weight", type=float, help="Weight on style in combined image.")
+parser.add_argument("--variation_weight", type=float, help="Weight on variation in combined image.")
 args = parser.parse_args()
 
 # Directory variables.

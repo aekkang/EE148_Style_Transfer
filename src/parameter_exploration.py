@@ -22,7 +22,7 @@ PARAMETERS_LST = [
 ]
 
 # Directory prefix.
-DIR_PREFIX = "examples/neckarfront"
+DIR_PREFIX = "examples/starryneckarfront"
 
 
 ##############################
@@ -34,7 +34,7 @@ for parameters in PARAMETERS_LST:
     parameters.append(DIR_PREFIX)
 
     subprocess.call(["python", "src/style_transfer.py",
-                     "--content_weight {}".format(parameters[0]),
-                     "--style_weight {}".format(parameters[1]),
-                     "--variation_weight {}".format(parameters[2]),
-                     " {3}_{0}_{1}_{2}/".format(*parameters)])
+                     "--content_weight", parameters[0],
+                     "--style_weight", parameters[1],
+                     "--variation_weight", parameters[2],
+                     "{3}_{0}_{1}_{2}/".format(*parameters)])
