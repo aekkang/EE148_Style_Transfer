@@ -27,7 +27,7 @@ parser.add_argument("dir_path", type=str, help="Path to the directory containing
 parser.add_argument("--content_weight", type=float, help="Weight on content in combined image.")
 parser.add_argument("--style_weight", type=float, help="Weight on style in combined image.")
 parser.add_argument("--variation_weight", type=float, help="Weight on variation in combined image.")
-parser.add_argument("--height", type=float, help="Height of combined image.")
+parser.add_argument("--height", type=int, help="Height of combined image.")
 args = parser.parse_args()
 
 # Directory variables.
