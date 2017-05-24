@@ -29,9 +29,8 @@ DIR_PREFIX = "examples/neckarfront"
 # PARAMETER EXPLORATION
 ##############################
 
+# Call the style transfer script with different sets of parameters.
 for parameters in PARAMETERS_LST:
-    subprocess.call("python src/style_transfer" \
-                    + " --content_weight " + parameters[0] \
-                    + " --style_weight " + parameters[1] \
-                    + " --variation_weight " + parameters[2] \
-                    + " {}_{}_{}_{}/".format(DIR_PREFIX, *parameters))
+    subprocess.call(["python",
+        ("src/style_transfer.py --content_weight {0} --style_weight {1} --variation_weight {2}" \
+         + " {3}_{0}_{1}_{2}/").format(*parameters, DIR_PREFIX)])
