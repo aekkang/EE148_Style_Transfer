@@ -34,5 +34,7 @@ for parameters in PARAMETERS_LST:
     parameters.append(DIR_PREFIX)
 
     subprocess.call(["python", "src/style_transfer.py",
-                     parameters[0], parameters[1], parameters[2],
+                     "--content_weight {}".format(parameters[0]),
+                     "--style_weight {}".format(parameters[1]),
+                     "--variation_weight {}".format(parameters[2]),
                      " {3}_{0}_{1}_{2}/".format(*parameters)])
