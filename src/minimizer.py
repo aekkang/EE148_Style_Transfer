@@ -45,7 +45,7 @@ class Minimizer(object):
         self.width = width
         self.height = height
         self.combination_prefix = dir_path + "combination"
-        self.logfile = open(dir_path + "loss.log", 'w')
+        self.logfile = open(dir_path + "result.log", 'w')
 
         print('')
 
@@ -80,7 +80,7 @@ class Minimizer(object):
         """
 
         # Log status.
-        self.logfile.write("{}: {:g}\n".format(self.i, self.loss))
+        self.logfile.write("{}, {:g}\n".format(self.i, self.loss))
 
         # Save the combined image if a sufficient number of iterations has passed.
         if self.i % SAVE_PER_N_ITERS == 0:
