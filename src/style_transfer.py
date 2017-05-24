@@ -21,6 +21,8 @@ from minimizer import *
 # ARGUMENT PROCESSING
 ##############################
 
+### TODO: add capability to start from a half-generated image.
+
 # Parse script arguments.
 parser = argparse.ArgumentParser(description="Style transfer using neural networks.")
 parser.add_argument("dir_path", type=str, help="Path to the directory containing images.")

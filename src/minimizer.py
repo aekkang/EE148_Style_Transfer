@@ -100,10 +100,6 @@ class Minimizer(object):
             # Print status.1
             print("Finished!")
             print('')
-            
-            # Save the final combined image.
-            img = np.copy(combination_i)
-            imsave(self.combination_prefix + "_final.jpg", deprocess_img(img, self.width, self.height))
 
             # Close the log file.
             self.logfile.close()
