@@ -80,7 +80,7 @@ def variation_loss(img_tensor):
 # TOTAL LOSS
 ##############################
 
-def total_loss(model):
+def total_loss(model, content_weight, style_weight, variation_weight):
     """
     Given a model, calculate the total loss, which consists of
     the content, style, and variation losses.
@@ -91,16 +91,16 @@ def total_loss(model):
     # Content loss.
     content_tensor = model.get_layer(CONTENT_LAYER).output[0]
     combination_tensor = model.get_layer(CONTENT_LAYER).output[2]
-    loss += CONTENT_WEIGHT * content_loss(content_tensor, combination_tensor)
+    loss += content_weight * content_loss(content_tensor, combination_tensor)
 
     # Style loss.
     for i, style_layer in enumerate(STYLE_LAYERS):
         style_tensor = model.get_layer(style_layer).output[1]
         combination_tensor = model.get_layer(style_layer).output[2]
-        loss += STYLE_WEIGHT * STYLE_LAYERS_WEIGHTS[i] \
+        loss += style_weight * STYLE_LAYERS_WEIGHTS[i] \
                 * style_loss(style_tensor, combination_tensor)
 
     # Variation loss.
-    loss += VARIATION_WEIGHT * variation_loss(model.inputs[0][2])
+    loss += variation_weight * variation_loss(model.inputs[0][2])
 
     return loss

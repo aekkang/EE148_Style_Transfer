@@ -25,8 +25,12 @@ from minimizer import *
 # Parse script arguments.
 parser = argparse.ArgumentParser(description="Style transfer using neural networks.")
 parser.add_argument("dir_path", help="Path to the directory containing images.")
-
+parser.add_argument("--content_weight", help="Weight on content in combined image.")
+parser.add_argument("--style_weight", help="Weight on style in combined image.")
+parser.add_argument("--variation_weight", help="Weight on variation in combined image.")
 args = parser.parse_args()
+
+# Directory variables.
 dir_path = args.dir_path
 
 if dir_path[-1] != '/':
@@ -34,6 +38,11 @@ if dir_path[-1] != '/':
 
 content_path = dir_path + "content.jpg"
 style_path = dir_path + "style.jpg"
+
+# Weight terms.
+content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
+style_weight = args.style_weight if args.style_weight is not None else STYLE_WEIGHT
+variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
 
 
 ##############################
@@ -61,7 +70,7 @@ input_tensor = K.concatenate((content, style, combination), axis=0)
 model = NETWORK_MODEL(input_tensor=input_tensor, include_top=False)
 
 # Calculate the total loss and its gradients with respect to the combined image.
-loss = total_loss(model)
+loss = total_loss(model, content_weight, style_weight, variation_weight)
 gradients = K.gradients(loss, combination)
 
 # Function to minimize.
