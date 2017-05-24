@@ -8,7 +8,7 @@
 
 import time
 import numpy as np
-from cv2 import imwrite
+from scipy.misc import imsave
 
 from data_processing import *
 from config import *
@@ -93,7 +93,7 @@ class Minimizer(object):
 
             # Save the combined image.
             img = np.copy(combination_i)
-            imwrite(self.combination_prefix + "_{}.jpg".format(self.i), deprocess_img(img, self.width, self.height))
+            imsave(self.combination_prefix + "_{}.jpg".format(self.i), deprocess_img(img, self.width, self.height))
         
         # Check if the minimization has finished.
         if self.i == ITERS:
@@ -102,8 +102,8 @@ class Minimizer(object):
             print('')
             
             # Save the final combined image.
-            combination_final = combination_i.reshape((1, self.height, self.width, 3))
-            imwrite(self.combination_prefix + "_final.jpg", deprocess_img(combination_final, self.width, self.height))
+            img = np.copy(combination_i)
+            imsave(self.combination_prefix + "_final.jpg", deprocess_img(img, self.width, self.height))
 
             # Close the log file.
             self.logfile.close()

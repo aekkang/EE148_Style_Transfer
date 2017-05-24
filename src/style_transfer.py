@@ -10,7 +10,6 @@ import argparse
 import numpy as np
 from keras import backend as K
 from scipy.optimize import minimize
-from cv2 import imwrite
 
 from config import *
 from data_processing import *
