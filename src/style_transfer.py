@@ -27,6 +27,7 @@ parser.add_argument("dir_path", type=str, help="Path to the directory containing
 parser.add_argument("--content_weight", type=float, help="Weight on content in combined image.")
 parser.add_argument("--style_weight", type=float, help="Weight on style in combined image.")
 parser.add_argument("--variation_weight", type=float, help="Weight on variation in combined image.")
+parser.add_argument("--height", type=float, help="Height of combined image.")
 args = parser.parse_args()
 
 # Directory variables.
@@ -42,6 +43,7 @@ style_path = dir_path + "style.jpg"
 content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
 style_weight = args.style_weight if args.style_weight is not None else STYLE_WEIGHT
 variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
+height = args.height if args.height is not None else HEIGHT
 
 
 ##############################
@@ -49,8 +51,8 @@ variation_weight = args.variation_weight if args.variation_weight is not None el
 ##############################
 
 # Calculate desired width and height.
-width, height = load_img(content_path).size
-width, height = int(HEIGHT * width / height), HEIGHT
+w, h = load_img(content_path).size
+width = int(height * w / h)
 
 # Load images and declare variable to store the combined image.
 content = preprocess_img(content_path, width, height)
