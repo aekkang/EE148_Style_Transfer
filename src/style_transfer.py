@@ -82,7 +82,7 @@ output_dir = os.path.join(input_dir, "../{}_c{}_s{}_v{}_w".format(input_dir.spli
                             format_parameter(variation_weight)))
 
 for weight in style_layers_weights:
-    output_dir += "{:g}_".format(format_parameter(weight))
+    output_dir += "{}_".format(format_parameter(weight))
 
 output_dir += "h{:d}".format(height)
 
@@ -152,4 +152,4 @@ combination_i = combination_i.flatten()
 # as the minimization method as it can work around memory constraints.
 result = minimize(minimizer.f_loss, combination_i, jac=minimizer.f_gradients,
                   method="L-BFGS-B", callback=minimizer.write,
-                  options={"maxiter": ITERS})
+                  options={"maxiter": iters})
