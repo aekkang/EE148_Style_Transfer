@@ -16,13 +16,19 @@ import subprocess
 
 # Parameters to explore.
 PARAMETERS_LST = [
+    # Tests.
+    ["1e0", "1e2", "0", "1", "1", "1", "1", "1", "400"],
+
+    # Actual runs.
+    ["1e0", "1e2", "0"],
+    ["1e0", "1e2", "0"],
+    ["1e0", "1e2", "0"],
+    ["1e0", "1e2", "0"],
+    ["1e0", "1e2", "0"],
     ["1e0", "1e2", "0"],
     ["1e0", "1e3", "0"],
     ["1e0", "1e4", "0"]
 ]
-
-# Directory prefix.
-DIR_PREFIX = "examples/starryneckarfront"
 
 
 ##############################
@@ -34,7 +40,9 @@ for parameters in PARAMETERS_LST:
     parameters.append(DIR_PREFIX)
 
     subprocess.call(["python", "src/style_transfer.py",
+                     "runs2/starryneckarfront",
                      "--content_weight", parameters[0],
                      "--style_weight", parameters[1],
                      "--variation_weight", parameters[2],
-                     "{3}_{0}_{1}_{2}/".format(*parameters)])
+                     "--style_layers_weights", parameters[3:8],
+                     "--height", parameters[8]])

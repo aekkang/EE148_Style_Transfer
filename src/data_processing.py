@@ -10,7 +10,13 @@ import numpy as np
 from keras import backend as K
 from keras.preprocessing.image import load_img, img_to_array
 
-from config import *
+
+##############################
+# PARAMETERS
+##############################
+
+# ImageNet processing parameters.
+IMAGENET_MEAN = [103.939, 116.779, 123.68]
 
 
 ##############################

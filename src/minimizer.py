@@ -7,11 +7,13 @@
 ######################################################################
 
 import time
+import os
+
 import numpy as np
 from scipy.misc import imsave
 
 from data_processing import *
-from config import *
+from defaults import *
 
 
 ##############################
@@ -28,7 +30,7 @@ class Minimizer(object):
     """Interface to SciPy's minimize function.
     """
 
-    def __init__(self, f_to_minimize, width, height, dir_path):
+    def __init__(self, f_to_minimize, width, height, iters, save_per_n_iters, load_previous, utput_dir):
         """Initialize shared values and store the loss function to minimize.
         """
 
@@ -40,12 +42,17 @@ class Minimizer(object):
         self.f_to_minimize = f_to_minimize
         
         # Values for the callback method.
-        self.i = 0
+        self.i = load_previous if load_previous is not None else 0
         self.start = time.time()
+
         self.width = width
         self.height = height
-        self.combination_prefix = dir_path + "combination"
-        self.logfile = open(dir_path + "result.log", 'w')
+
+        self.iters = iters
+        self.save_per_n_iters = save_per_n_iters
+
+        self.combination_prefix = os.path.join(output_dir, "combination")
+        self.logfile = open(os.path.join(output_dir, "result.log"), 'w')
 
         print('')
 
@@ -84,7 +91,7 @@ class Minimizer(object):
         self.logfile.flush()
 
         # Save the combined image if a sufficient number of iterations has passed.
-        if self.i % SAVE_PER_N_ITERS == 0:
+        if self.i % self.save_per_n_iters == 0:
             # Print status.
             print("Iteration: {}".format(self.i))
             print("Elapsed time: {:.2f}s".format(time.time() - self.start))
@@ -96,8 +103,8 @@ class Minimizer(object):
             imsave(self.combination_prefix + "_{}.jpg".format(self.i), deprocess_img(img, self.width, self.height))
         
         # Check if the minimization has finished.
-        if self.i == ITERS:
-            # Print status.1
+        if self.i == self.iters:
+            # Print status.
             print("Finished!")
             print('')
 

@@ -9,7 +9,7 @@
 import numpy as np
 from keras import backend as K
 
-from config import *
+from defaults import *
 
 
 ##############################
@@ -80,7 +80,7 @@ def variation_loss(img_tensor):
 # TOTAL LOSS
 ##############################
 
-def total_loss(model, content_weight, style_weight, variation_weight):
+def total_loss(model, content_weight, style_weight, variation_weight, style_layers_weights):
     """
     Given a model, calculate the total loss, which consists of
     the content, style, and variation losses.
@@ -97,7 +97,7 @@ def total_loss(model, content_weight, style_weight, variation_weight):
     for i, style_layer in enumerate(STYLE_LAYERS):
         style_tensor = model.get_layer(style_layer).output[1]
         combination_tensor = model.get_layer(style_layer).output[2]
-        loss += style_weight * STYLE_LAYERS_WEIGHTS[i] \
+        loss += style_weight * style_layers_weights[i] \
                 * style_loss(style_tensor, combination_tensor)
 
     # Variation loss.
