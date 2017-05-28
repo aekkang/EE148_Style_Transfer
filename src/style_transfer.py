@@ -36,7 +36,7 @@ parser.add_argument("input_dir", type=str, help="Path to the directory containin
 parser.add_argument("--content_weight", type=float, help="Weight on content in combined image.")
 parser.add_argument("--style_weight", type=float, help="Weight on style in combined image.")
 parser.add_argument("--variation_weight", type=float, help="Weight on variation in combined image.")
-parser.add_argument("--style_layers_weights", type=float, nargs=*, help="Weights of each layer.")
+parser.add_argument("--style_layers_weights", type=float, nargs='*', help="Weights of each layer.")
 
 # Saving & loading arguments.
 parser.add_argument("--load_previous", type=bool, help="Start current minimization from results of previous minimization.")
@@ -58,7 +58,7 @@ input_dir = os.path.abspath(args.input_dir)
 
 # Weight arguments.
 content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
-style_weight = args.style_weight if args.style_weight si not None else STYLE_WEIGHT
+style_weight = args.style_weight if args.style_weight is not None else STYLE_WEIGHT
 variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
 style_layers_weights = args.style_layers_weights if args.style_layers_weights is not None else STYLE_LAYERS_WEIGHTS
 
@@ -76,7 +76,7 @@ height = args.height if args.height is not None else HEIGHT
 iters = args.iters if args.iters is not None else ITERS
 
 # Construct path to output directory.
-output_dir = os.path.join(input_dir, "../{}_c{}_s{}_v{}_w".format(dir_path,
+output_dir = os.path.join(input_dir, "../{}_c{}_s{}_v{}_w".format('/'.split(input_dir)[-1],
                             format_parameter(content_weight),
                             format_parameter(style_weight),
                             format_parameter(variation_weight)))
@@ -90,7 +90,7 @@ output_dir = os.path.abspath(output_dir)
 
 # Make output directory.
 if not os.path.isdir(output_dir):
-    os.makedir(output_dir)
+    os.mkdir(output_dir)
 
 # Construct paths to input files.
 if load_previous:
@@ -137,7 +137,7 @@ gradients = K.gradients(loss, combination)
 
 # Function to minimize.
 f_to_minimize = K.function([combination], [loss] + gradients)
-minimizer = Minimizer(f_to_minimize, width, height, iters, save_per_n_iters, load_previous=latest_save_num, output_dir)
+minimizer = Minimizer(f_to_minimize, width, height, iters, save_per_n_iters, output_dir, load_previous=latest_save_num)
 
 
 ##############################
