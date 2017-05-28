@@ -76,13 +76,13 @@ height = args.height if args.height is not None else HEIGHT
 iters = args.iters if args.iters is not None else ITERS
 
 # Construct path to output directory.
-output_dir = os.path.join(input_dir, "../{}_c{}_s{}_v{}_w".format('/'.split(input_dir)[-1],
+output_dir = os.path.join(input_dir, "../{}_c{}_s{}_v{}_w".format(input_dir.split('/')[-1],
                             format_parameter(content_weight),
                             format_parameter(style_weight),
                             format_parameter(variation_weight)))
 
 for weight in style_layers_weights:
-    output_dir += "{:g}_".format(weight)
+    output_dir += "{:g}_".format(format_parameter(weight))
 
 output_dir += "h{:d}".format(height)
 
