@@ -89,6 +89,17 @@ class Minimizer(object):
         # Log status.
         self.logfile.write("{}, {:g}\n".format(self.i, self.loss))
         self.logfile.flush()
+        
+        # Check if the minimization has finished.
+        if self.i >= self.iters:
+            # Print status.
+            print("Finished!")
+            print('')
+
+            # Close the log file.
+            self.logfile.close()
+
+            return
 
         # Save the combined image if a sufficient number of iterations has passed.
         if self.i % self.save_per_n_iters == 0:
@@ -101,14 +112,5 @@ class Minimizer(object):
             # Save the combined image.
             img = np.copy(combination_i)
             imsave(self.combination_prefix + "_{}.jpg".format(self.i), deprocess_img(img, self.width, self.height))
-        
-        # Check if the minimization has finished.
-        if self.i == self.iters:
-            # Print status.
-            print("Finished!")
-            print('')
-
-            # Close the log file.
-            self.logfile.close()
 
         self.i += 1

@@ -81,9 +81,8 @@ output_dir = os.path.join(input_dir, "../{}_c{}_s{}_v{}_w".format(input_dir.spli
                             format_parameter(style_weight),
                             format_parameter(variation_weight)))
 
-style_layers_weights_format = [w * sum(style_layers_weights) for w in style_layers_weights]
-for weight in style_layers_weights_format:
-    output_dir += "{}_".format(format_parameter(weight))
+for w in style_layers_weights:
+    output_dir += "{}_".format(format_parameter(w))
 
 output_dir += "h{:d}".format(height)
 
