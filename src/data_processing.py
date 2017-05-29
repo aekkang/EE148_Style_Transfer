@@ -55,9 +55,8 @@ def deprocess_img(img, width, height):
     img = img.reshape((height, width, 3))
 
     # Undo the network preprocess method.
-    img[:,:,0] += IMAGENET_MEAN[0]
-    img[:,:,1] += IMAGENET_MEAN[1]
-    img[:,:,2] += IMAGENET_MEAN[2]
+    for i in range(len(IMAGENET_MEAN)):
+        img[:,:,i] += IMAGENET_MEAN[i]
 
     # Clip the numbers to the appropriate range.
     img = np.clip(img, 0, 255).astype('uint8')
