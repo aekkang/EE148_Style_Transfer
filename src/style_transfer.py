@@ -97,8 +97,8 @@ if not os.path.isdir(output_dir):
 if load_previous:
     # Find the latest save file.
     saves = glob(os.path.join(output_dir, "combination_*"))
-    saves_nums = [int(previous.split('_')[-1]) for save in previous_saves]
-    latest_save = previous_saves[np.argmax(save_nums)]
+    saves_nums = [int(save.split('_')[-1][:-4]) for save in saves]
+    latest_save = saves[np.argmax(saves_nums)]
     latest_save_num = max(saves_nums)
     content_path = latest_save
 else:
