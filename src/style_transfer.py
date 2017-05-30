@@ -84,7 +84,7 @@ gradients = K.gradients(loss, combination)
 
 # Function to minimize.
 f_to_minimize = K.function([combination], [loss] + gradients)
-minimizer = Minimizer(f_to_minimize, width, height, iters, save_per_n_iters, output_dir, load_previous=latest_save_num)
+minimizer = Minimizer(f_to_minimize, width, height, iters, save_per_n_iters, output_dir, latest_save_num=latest_save_num)
 
 
 ##############################

@@ -30,7 +30,7 @@ class Minimizer(object):
     """Interface to SciPy's minimize function.
     """
 
-    def __init__(self, f_to_minimize, width, height, iters, save_per_n_iters, output_dir, load_previous=None):
+    def __init__(self, f_to_minimize, width, height, iters, save_per_n_iters, output_dir, latest_save_num=None):
         """Initialize shared values and store the loss function to minimize.
         """
 
@@ -42,7 +42,7 @@ class Minimizer(object):
         self.f_to_minimize = f_to_minimize
         
         # Values for the callback method.
-        self.i = load_previous if load_previous is not None else 0
+        self.i = latest_save_num if latest_save_num is not None else 0
         self.start = time.time()
 
         self.width = width
