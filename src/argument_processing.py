@@ -23,9 +23,9 @@ def process_args(args):
     ##############################
 
     content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
-    style_weights = [float(style_weight) / sum(style_weights) for style_weight in args.style_weights] if args.style_weights is not None else STYLE_WEIGHTS
+    style_weights = [float(style_weight) / sum(args.style_weights) for style_weight in args.style_weights] if args.style_weights is not None else STYLE_WEIGHTS
     variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
-    style_layer_weights = [float(style_layer_weight) / sum(style_layer_weights) for style_layer_weight in style_layer_weights] if args.style_layer_weights is not None else STYLE_LAYER_WEIGHTS
+    style_layer_weights = [float(style_layer_weight) / sum(args.style_layer_weights) for style_layer_weight in style_layer_weights] if args.style_layer_weights is not None else STYLE_LAYER_WEIGHTS
 
 
     ##############################
@@ -64,7 +64,7 @@ def process_args(args):
 
     # Style layers weights suffix.
     output_dir += "sl"
-    for style_layers_weight in style_layer_weights:
+    for style_layer_weight in style_layer_weights:
         output_dir += "{}_".format(format_parameter(style_layer_weight))
 
     # Height suffix.

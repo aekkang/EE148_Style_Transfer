@@ -98,4 +98,4 @@ combination_i = combination_i.flatten()
 # as the minimization method as it can work around memory constraints.
 result = minimize(minimizer.f_loss, combination_i, jac=minimizer.f_gradients,
                   method="L-BFGS-B", callback=minimizer.write,
-                  options={"maxiter": iters, "maxfun": float("inf")})
+                  options={"maxiter": iters})
