@@ -61,10 +61,10 @@ w, h = load_img(content_path).size
 width = int(height * w / h)
 
 # Load images and declare variable to store the combined image.
-content = preprocess_img(content_path, width, height)
+content = K.variable(preprocess_img(content_path, width, height))
 styles = []
 for style_path in style_paths:
-    styles.append(preprocess_img(style_path, width, height))
+    styles.append(K.variable(preprocess_img(style_path, width, height)))
 combination = K.placeholder((1, height, width, 3))
 
 # Concatenate the images into one tensor.
@@ -91,8 +91,13 @@ minimizer = Minimizer(f_to_minimize, width, height, iters, save_per_n_iters, out
 # RUN MINIMIZER
 ##############################
 
-# Start with a white noise image.
-combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
+if load_previous:
+    # Start with the latest save.
+    combination_i = preprocess_img(content_path, width, height)
+else:
+    # Start with a white noise image.
+    combination_i = np.random.uniform(0, 255, (1, height, width, 3)) - 128.
+
 combination_i = combination_i.flatten()
 
 # Minimize the loss with respect to the combined image. We use L-BFGS-B

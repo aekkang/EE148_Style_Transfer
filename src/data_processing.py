@@ -7,7 +7,6 @@
 ######################################################################
 
 import numpy as np
-from keras import backend as K
 from keras.preprocessing.image import load_img, img_to_array
 
 from defaults import *
@@ -40,7 +39,7 @@ def preprocess_img(path, width, height):
     arr = NETWORK_PREPROCESS(arr)
 
     # Contain the dataset in a Keras variable.
-    return K.variable(arr)
+    return arr
 
 
 ##############################
