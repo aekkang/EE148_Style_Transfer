@@ -37,7 +37,7 @@ parser.add_argument("--variation_weight", type=float, help="Weight on variation 
 parser.add_argument("--style_layer_weights", type=float, nargs='*', help="Weights of each layer.")
 
 # Saving & loading arguments.
-parser.add_argument("--load_previous", type=bool, help="Start current minimization from results of previous minimization.")
+parser.add_argument("--load_previous", action="store_true", help="Start current minimization from results of previous minimization.")
 parser.add_argument("--save_per_n_iters", type=int, help="Number of iterations to run the minimizations before each save.")
 
 # Miscellaneous arguments.
