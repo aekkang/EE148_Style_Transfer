@@ -23,6 +23,7 @@ def process_args(args):
     ##############################
 
     content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
+    style_weight = args.style_weight if args.style_weight is not None else STYLE_WEIGHT
     style_ratios = [float(style_ratio) / sum(args.style_ratios) for style_ratio in args.style_ratios] if args.style_ratios is not None else STYLE_RATIOS
     variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
     style_layer_weights = [float(style_layer_weight) / sum(args.style_layer_weights) for style_layer_weight in style_layer_weights] if args.style_layer_weights is not None else STYLE_LAYER_WEIGHTS
@@ -92,16 +93,15 @@ def process_args(args):
 
     # Construct paths to style images.
     style_paths = glob.glob(os.path.join(input_dir, "style*"))
-    n_styles = len(style_paths)
 
 
     ##############################
     # ARGUMENT VALIDATION
     ##############################
 
-    if len(style_weights) != n_styles:
+    if len(style_ratios) != len(style_paths):
         raise ValueError("Number of style weights must match number of style images.")
-    if len(style_layer_weights) != len(STYLE_LAYER_WEIGHTS):
+    if len(style_layer_weights) != len(STYLE_LAYERS):
         raise ValueError("Number of style layers weights must match number of style layers.")
 
 
@@ -113,6 +113,6 @@ def process_args(args):
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
 
-    return input_dir, content_weight, style_weights, variation_weight, style_layer_weights, \
+    return input_dir, content_weight, style_weight, style_ratios, variation_weight, style_layer_weights, \
            load_previous, save_per_n_iters, height, iters, output_dir, latest_save_num, \
-           content_path, style_paths, n_styles
+           content_path, style_paths
