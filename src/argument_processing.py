@@ -82,7 +82,7 @@ def process_args(args):
     # Construct paths to content image.
     if load_previous:
         # Find the latest save file.
-        saves = glob(os.path.join(output_dir, "combination_*"))
+        saves = glob.glob(os.path.join(output_dir, "combination_*"))
         saves_nums = [int(save.split('_')[-1][:-4]) for save in saves]
         latest_save = saves[np.argmax(saves_nums)]
         latest_save_num = max(saves_nums)
