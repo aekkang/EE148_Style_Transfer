@@ -70,10 +70,6 @@ def process_args(args):
     # Height suffix.
     output_dir += "h{:d}".format(height)
 
-    # Make output directory.
-    if not os.path.isdir(output_dir):
-        os.mkdir(output_dir)
-
 
     ##############################
     # INPUT PATH ARGUMENTS
@@ -109,6 +105,10 @@ def process_args(args):
     ##############################
     # RETURN ARGUMENTS
     ##############################
+
+    # Make output directory.
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
 
     return input_dir, content_weight, style_weights, variation_weight, style_layer_weights, \
            load_previous, save_per_n_iters, height, iters, output_dir, latest_save_num, \
