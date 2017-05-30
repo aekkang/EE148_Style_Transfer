@@ -47,9 +47,9 @@ parser.add_argument("--iters", type=int, help="Number of total iterations to run
 args = parser.parse_args()
 
 # Process arguments.
-input_dir, content_weight, style_weight, style_ratios, variation_weight, style_layer_weights, \
-load_previous, save_per_n_iters, height, iters, output_dir, latest_save_num, \
-content_path, style_paths = process_args(args)
+content_weight, style_weight, style_ratios, variation_weight, style_layer_weights, \
+load_previous, save_per_n_iters, height, iters, latest_save_num, \
+input_dir, output_dir, content_path, style_paths = process_args(args)
 
 
 ##############################

@@ -45,7 +45,7 @@ for parameters in PARAMETERS_LST:
     subprocess.call(["python", "src/style_transfer.py",
                      "runs2/starryneckarfront",
                      "--content_weight", parameters[0],
-                     "--style_weights", parameters[1],
+                     "--style_weight", parameters[1],
                      "--variation_weight", parameters[2],
                      "--style_layer_weights", parameters[3], parameters[4], parameters[5], parameters[6], parameters[7],
                      "--height", parameters[8],

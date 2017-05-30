@@ -35,7 +35,7 @@ def process_args(args):
 
     # Saving & loading arguments.
     load_previous = args.load_previous if args.load_previous is not None else LOAD_PREVIOUS
-    save_per_n_iters = args.save_per_n_iters or SAVE_PER_N_ITERS
+    save_per_n_iters = args.save_per_n_iters if args.save_per_n_iters is not None else SAVE_PER_N_ITERS
 
     # Miscellaneous arguments.
     height = args.height if args.height is not None else HEIGHT
@@ -113,6 +113,6 @@ def process_args(args):
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
 
-    return input_dir, content_weight, style_weight, style_ratios, variation_weight, style_layer_weights, \
-           load_previous, save_per_n_iters, height, iters, output_dir, latest_save_num, \
-           content_path, style_paths
+    return content_weight, style_weight, style_ratios, variation_weight, style_layer_weights, \
+           load_previous, save_per_n_iters, height, iters, latest_save_num, \
+           input_dir, output_dir, content_path, style_paths
