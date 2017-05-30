@@ -52,7 +52,7 @@ class Minimizer(object):
         self.save_per_n_iters = save_per_n_iters
 
         self.combination_prefix = os.path.join(output_dir, "combination")
-        self.logfile = open(os.path.join(output_dir, "result.log"), 'w')
+        self.logfile = open(os.path.join(output_dir, "result.log"), 'a')
 
         print('')
 
