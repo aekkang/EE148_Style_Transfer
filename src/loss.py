@@ -86,15 +86,15 @@ def total_loss(model, content_weight, style_weight, style_ratios, variation_weig
     the content, style, and variation losses.
     """
 
+    n_styles = len(style_ratios)
     loss = K.variable(0.)
 
     # Content loss.
     content_tensor = model.get_layer(CONTENT_LAYER).output[0]
-    combination_tensor = model.get_layer(CONTENT_LAYER).output[2]
+    combination_tensor = model.get_layer(CONTENT_LAYER).output[n_styles + 1]
     loss += content_weight * content_loss(content_tensor, combination_tensor)
 
     # Style loss.
-    n_styles = len(style_ratios)
     for i in range(n_styles):
         for j, style_layer in enumerate(STYLE_LAYERS):
             style_tensor = model.get_layer(style_layer).output[i + 1]
