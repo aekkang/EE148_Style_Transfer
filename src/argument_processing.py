@@ -9,6 +9,8 @@
 import os
 import glob
 
+import numpy as np
+
 from defaults import *
 from utility import *
 
@@ -24,9 +26,9 @@ def process_args(args):
 
     content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
     style_weight = args.style_weight if args.style_weight is not None else STYLE_WEIGHT
-    style_ratios = [float(style_ratio) / sum(args.style_ratios) for style_ratio in args.style_ratios] if args.style_ratios is not None else STYLE_RATIOS
+    style_ratios = np.array(args.style_ratios) / np.sum(args.style_ratios) if args.style_ratios is not None else STYLE_RATIOS
     variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
-    style_layer_weights = [float(style_layer_weight) / sum(args.style_layer_weights) for style_layer_weight in style_layer_weights] if args.style_layer_weights is not None else STYLE_LAYER_WEIGHTS
+    style_layer_weights = np.array(args.style_layer_weights) / np.sum(args.style_layer_weights) if args.style_layer_weights is not None else STYLE_LAYER_WEIGHTS
 
 
     ##############################
