@@ -38,6 +38,7 @@ def process_args(args):
     # Saving & loading arguments.
     load_previous = args.load_previous if args.load_previous is not None else LOAD_PREVIOUS
     save_per_n_iters = args.save_per_n_iters if args.save_per_n_iters is not None else SAVE_PER_N_ITERS
+    overwrite = args.overwrite if args.overwrite is not None else OVERWRITE
 
     # Miscellaneous arguments.
     height = args.height if args.height is not None else HEIGHT
@@ -75,6 +76,19 @@ def process_args(args):
 
     # Height suffix.
     output_dir += "h{:d}".format(height)
+
+    # Suffix to prevent overwriting.
+    if not overwrite:
+        existing_dirs = glob.glob(output_dir)
+        i = 0
+
+        # Increment suffix until the output directory name doesn't exist.
+        new_output_dir = output_dir
+        while new_output_dir in existing_dirs:
+            new_output_dir = output_dir "_{}".format(i)
+            i += 1
+
+        output_dir = new_output_dir
 
 
     ##############################

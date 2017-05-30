@@ -39,6 +39,7 @@ parser.add_argument("--style_layer_weights", type=float, nargs='*', help="Weight
 # Saving & loading arguments.
 parser.add_argument("--load_previous", action="store_true", help="Start current minimization from results of previous minimization.")
 parser.add_argument("--save_per_n_iters", type=int, help="Number of iterations to run the minimizations before each save.")
+parser.add_argument("--overwrite", action="store_false", help="Number of iterations to run the minimizations before each save.")
 
 # Miscellaneous arguments.
 parser.add_argument("--height", type=int, help="Height of combined image.")
