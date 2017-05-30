@@ -7,14 +7,12 @@
 ######################################################################
 
 import argparse
-import os
-from glob import glob
 
 import numpy as np
 from keras import backend as K
 from scipy.optimize import minimize
 
-from defaults import *
+from argument_processing import *
 from data_processing import *
 from loss import *
 from minimizer import *
@@ -48,9 +46,8 @@ parser.add_argument("--iters", type=int, help="Number of total iterations to run
 args = parser.parse_args()
 
 # Process arguments.
-input_dir, content_weight, style_weight, variation_weight, style_layers_weights,
-load_previous, save_per_n_iters, height, iters, output_dir, content_path, style_paths
-    = process_args(args)
+input_dir, content_weight, style_weight, variation_weight, style_layers_weights, load_previous, \
+save_per_n_iters, height, iters, output_dir, latest_save_num, content_path, style_paths = process_args(args)
 
 
 ##############################

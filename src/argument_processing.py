@@ -6,6 +6,10 @@
 # Desc:     Contains argument processing function for style transfer.
 ######################################################################
 
+import os
+import glob
+
+from defaults import *
 from utility import *
 
 
@@ -86,6 +90,6 @@ def process_args(args):
     # RETURN ARGUMENTS
     ##############################
 
-    return input_dir, content_weight, style_weight, variation_weight,
-           style_layers_weights, load_previous, save_per_n_iters,
-           height, iters, output_dir, content_path, style_paths
+    return input_dir, content_weight, style_weight, variation_weight, \
+           style_layers_weights, load_previous, save_per_n_iters, \
+           height, iters, output_dir, latest_save_num, content_path, style_paths
