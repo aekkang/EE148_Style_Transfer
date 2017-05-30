@@ -63,7 +63,7 @@ def process_args(args):
     output_dir += "v{}_".format(format_parameter(variation_weight))
 
     # Style layers weights suffix.
-    output_dir += "w"
+    output_dir += "sl"
     for style_layers_weight in style_layer_weights:
         output_dir += "{}_".format(format_parameter(style_layer_weight))
 
