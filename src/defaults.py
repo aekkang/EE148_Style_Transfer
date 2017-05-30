@@ -23,7 +23,8 @@ STYLE_LAYERS = ["block1_conv1", "block2_conv1", "block3_conv1", "block4_conv1", 
 
 # Weight parameters.
 CONTENT_WEIGHT = 1e0
-STYLE_WEIGHTS = [1e4]
+STYLE_WEIGHT = 1e4
+STYLE_RATIOS = [1]
 VARIATION_WEIGHT = 0
 STYLE_LAYER_WEIGHTS = [1. / len(STYLE_LAYERS) for _ in range(len(STYLE_LAYERS))]
 

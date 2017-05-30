@@ -31,7 +31,8 @@ parser.add_argument("input_dir", type=str, help="Path to the directory containin
 # All following arguments are optional.
 # Weight arguments.
 parser.add_argument("--content_weight", type=float, help="Weight on content in combined image.")
-parser.add_argument("--style_weights", type=float, nargs='*', help="Weight on style in combined image.")
+parser.add_argument("--style_weight", type=float, help="Weight on style in combined image.")
+parser.add_argument("--style_ratios", type=float, nargs='*', help="Weight on style in combined image.")
 parser.add_argument("--variation_weight", type=float, help="Weight on variation in combined image.")
 parser.add_argument("--style_layer_weights", type=float, nargs='*', help="Weights of each layer.")
 
@@ -46,7 +47,7 @@ parser.add_argument("--iters", type=int, help="Number of total iterations to run
 args = parser.parse_args()
 
 # Process arguments.
-input_dir, content_weight, style_weights, variation_weight, style_layer_weights, \
+input_dir, content_weight, style_weight, style_ratios, variation_weight, style_layer_weights, \
 load_previous, save_per_n_iters, height, iters, output_dir, latest_save_num, \
 content_path, style_paths, n_styles = process_args(args)
 
@@ -78,7 +79,7 @@ input_tensor = K.concatenate([content] + styles + [combination], axis=0)
 model = NETWORK_MODEL(input_tensor=input_tensor, include_top=False)
 
 # Calculate the total loss and its gradients with respect to the combined image.
-loss = total_loss(model, content_weight, style_weights, variation_weight, style_layer_weights, n_styles)
+loss = total_loss(model, content_weight, style_weight, style_ratios, variation_weight, style_layer_weights)
 gradients = K.gradients(loss, combination)
 
 # Function to minimize.

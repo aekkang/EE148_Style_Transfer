@@ -23,7 +23,7 @@ def process_args(args):
     ##############################
 
     content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
-    style_weights = [float(style_weight) / sum(args.style_weights) for style_weight in args.style_weights] if args.style_weights is not None else STYLE_WEIGHTS
+    style_ratios = [float(style_ratio) / sum(args.style_ratios) for style_ratio in args.style_ratios] if args.style_ratios is not None else STYLE_RATIOS
     variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
     style_layer_weights = [float(style_layer_weight) / sum(args.style_layer_weights) for style_layer_weight in style_layer_weights] if args.style_layer_weights is not None else STYLE_LAYER_WEIGHTS
 
@@ -54,10 +54,13 @@ def process_args(args):
     # Content weight suffix.
     output_dir += "c{}_".format(format_parameter(content_weight))
 
-    # Style weights suffix.
-    output_dir += "s"
-    for style_weight in style_weights:
-        output_dir += "{}_".format(format_parameter(style_weight))
+    # Style weight suffix.
+    output_dir += "s{}_".format(format_parameter(style_weight))
+
+    # Style ratios suffix.
+    output_dir += "sr"
+    for style_ratio in style_ratios:
+        output_dir += "{}_".format(format_parameter(style_ratio))
     
     # Variation weight suffix.
     output_dir += "v{}_".format(format_parameter(variation_weight))
