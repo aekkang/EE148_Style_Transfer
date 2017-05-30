@@ -23,10 +23,9 @@ def process_args(args):
     ##############################
 
     content_weight = args.content_weight if args.content_weight is not None else CONTENT_WEIGHT
-    style_weight = args.style_weight if args.style_weight is not None else STYLE_WEIGHT
+    style_weights = args.style_weights if args.style_weights is not None else STYLE_WEIGHTS
     variation_weight = args.variation_weight if args.variation_weight is not None else VARIATION_WEIGHT
-    style_layers_weights = args.style_layers_weights if args.style_layers_weights is not None else STYLE_LAYERS_WEIGHTS
-    style_layers_weights = [float(w) / sum(style_layers_weights) for w in style_layers_weights]
+    style_layer_weights = [float(w) / sum(style_layer_weights) for w in style_layer_weights] if args.style_layer_weights is not None else STYLE_LAYER_WEIGHTS
 
 
     ##############################
@@ -50,15 +49,25 @@ def process_args(args):
     input_dir = os.path.abspath(args.input_dir)
 
     # Construct output directory path.
-    output_dir = input_dir
-    output_dir += "_{}".format(format_parameter(content_weight))
-    output_dir += "_{}".format(format_parameter(style_weight))
-    output_dir += "_{}".format(format_parameter(variation_weight))
+    output_dir = input_dir + '_'
 
-    output_dir += "_w"
-    for w in style_layers_weights:
-        output_dir += "{}_".format(format_parameter(w))
+    # Content weight suffix.
+    output_dir += "c{}_".format(format_parameter(content_weight))
 
+    # Style weights suffix.
+    output_dir += "s"
+    for style_weight in style_weights:
+        output_dir += "{}_".format(format_parameter(style_weight))
+    
+    # Variation weight suffix.
+    output_dir += "v{}_".format(format_parameter(variation_weight))
+
+    # Style layers weights suffix.
+    output_dir += "w"
+    for style_layers_weight in style_layer_weights:
+        output_dir += "{}_".format(format_parameter(style_layer_weight))
+
+    # Height suffix.
     output_dir += "h{:d}".format(height)
 
     # Make output directory.
@@ -84,12 +93,23 @@ def process_args(args):
 
     # Construct paths to style images.
     style_paths = glob.glob(os.path.join(input_dir, "style*"))
+    n_styles = len(style_paths)
+
+
+    ##############################
+    # ARGUMENT VALIDATION
+    ##############################
+
+    if len(style_weights) != n_styles:
+        raise ValueError("Number of style weights must match number of style images.")
+    if len(style_layer_weights) != len(STYLE_LAYER_WEIGHTS):
+        raise ValueError("Number of style layers weights must match number of style layers.")
 
 
     ##############################
     # RETURN ARGUMENTS
     ##############################
 
-    return input_dir, content_weight, style_weight, variation_weight, \
-           style_layers_weights, load_previous, save_per_n_iters, \
-           height, iters, output_dir, latest_save_num, content_path, style_paths
+    return input_dir, content_weight, style_weights, variation_weight, style_layer_weights, \
+           load_previous, save_per_n_iters, height, iters, output_dir, latest_save_num, \
+           content_path, style_paths, n_styles

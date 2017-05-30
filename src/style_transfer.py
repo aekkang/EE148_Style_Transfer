@@ -31,9 +31,9 @@ parser.add_argument("input_dir", type=str, help="Path to the directory containin
 # All following arguments are optional.
 # Weight arguments.
 parser.add_argument("--content_weight", type=float, help="Weight on content in combined image.")
-parser.add_argument("--style_weight", type=float, help="Weight on style in combined image.")
+parser.add_argument("--style_weights", type=float, nargs='*', help="Weight on style in combined image.")
 parser.add_argument("--variation_weight", type=float, help="Weight on variation in combined image.")
-parser.add_argument("--style_layers_weights", type=float, nargs=len(STYLE_LAYERS), help="Weights of each layer.")
+parser.add_argument("--style_layer_weights", type=float, nargs='*', help="Weights of each layer.")
 
 # Saving & loading arguments.
 parser.add_argument("--load_previous", type=bool, help="Start current minimization from results of previous minimization.")
@@ -46,8 +46,9 @@ parser.add_argument("--iters", type=int, help="Number of total iterations to run
 args = parser.parse_args()
 
 # Process arguments.
-input_dir, content_weight, style_weight, variation_weight, style_layers_weights, load_previous, \
-save_per_n_iters, height, iters, output_dir, latest_save_num, content_path, style_paths = process_args(args)
+input_dir, content_weight, style_weights, variation_weight, style_layer_weights, \
+load_previous, save_per_n_iters, height, iters, output_dir, latest_save_num, \
+content_path, style_paths, n_styles = process_args(args)
 
 
 ##############################
@@ -67,7 +68,6 @@ combination = K.placeholder((1, height, width, 3))
 
 # Concatenate the images into one tensor.
 input_tensor = K.concatenate([content] + styles + [combination], axis=0)
-n_styles = len(styles)
 
 
 ##############################
@@ -78,7 +78,7 @@ n_styles = len(styles)
 model = NETWORK_MODEL(input_tensor=input_tensor, include_top=False)
 
 # Calculate the total loss and its gradients with respect to the combined image.
-loss = total_loss(model, content_weight, style_weight, variation_weight, style_layers_weights, n_styles)
+loss = total_loss(model, content_weight, style_weights, variation_weight, style_layer_weights, n_styles)
 gradients = K.gradients(loss, combination)
 
 # Function to minimize.
@@ -98,4 +98,4 @@ combination_i = combination_i.flatten()
 # as the minimization method as it can work around memory constraints.
 result = minimize(minimizer.f_loss, combination_i, jac=minimizer.f_gradients,
                   method="L-BFGS-B", callback=minimizer.write,
-                  options={"maxiter": iters})
+                  options={"maxiter": iters, "maxfun": float("inf")})
