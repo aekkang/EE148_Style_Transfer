@@ -39,6 +39,7 @@ def process_args(args):
     load_previous = args.load_previous if args.load_previous is not None else LOAD_PREVIOUS
     save_per_n_iters = args.save_per_n_iters if args.save_per_n_iters is not None else SAVE_PER_N_ITERS
     overwrite = args.overwrite if args.overwrite is not None else OVERWRITE
+    start_state = args.start_state if args.start_state is not None else START_STATE
 
     # Miscellaneous arguments.
     height = args.height if args.height is not None else HEIGHT
@@ -120,6 +121,9 @@ def process_args(args):
     if len(style_layer_weights) != len(STYLE_LAYERS):
         raise ValueError("Number of style layers weights must match number of style layers.")
 
+    if start_state != "content" and start_state != "blank":
+        raise ValueError("Start state must be either 'content' or 'blank'.")
+
 
     ##############################
     # RETURN ARGUMENTS
@@ -130,5 +134,5 @@ def process_args(args):
         os.mkdir(output_dir)
 
     return content_weight, style_weight, style_ratios, variation_weight, style_layer_weights, \
-           load_previous, save_per_n_iters, height, iters, latest_save_num, \
+           load_previous, start_state, save_per_n_iters, height, iters, latest_save_num, \
            input_dir, output_dir, content_path, style_paths
