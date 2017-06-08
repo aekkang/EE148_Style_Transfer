@@ -79,13 +79,13 @@ def process_args(args):
 
     # Suffix to prevent overwriting.
     if not overwrite:
-        existing_dirs = glob.glob(output_dir)
+        existing_dirs = glob.glob(output_dir + '*')
         i = 0
 
         # Increment suffix until the output directory name doesn't exist.
         new_output_dir = output_dir
         while new_output_dir in existing_dirs:
-            new_output_dir = output_dir "_{}".format(i)
+            new_output_dir = output_dir + "_{}".format(i)
             i += 1
 
         output_dir = new_output_dir
