@@ -121,8 +121,8 @@ def process_args(args):
     if len(style_layer_weights) != len(STYLE_LAYERS):
         raise ValueError("Number of style layers weights must match number of style layers.")
 
-    if start_state != "content" and start_state != "blank":
-        raise ValueError("Start state must be either 'content' or 'blank'.")
+    if start_state != "content" and start_state != "blank" and start_state != "random":
+        raise ValueError("Start state must be either 'content', 'blank', or 'random'.")
 
 
     ##############################

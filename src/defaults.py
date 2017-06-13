@@ -32,6 +32,7 @@ STYLE_LAYER_WEIGHTS = [1. / len(STYLE_LAYERS) for _ in range(len(STYLE_LAYERS))]
 LOAD_PREVIOUS = False
 SAVE_PER_N_ITERS = 500
 OVERWRITE = False
+START_STATE = "random"
 
 # Miscellaneous parameters.
 HEIGHT = 400
